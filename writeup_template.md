@@ -27,6 +27,10 @@ The goals / steps of this project are the following:
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
+###Project Files
+Code for this solution is contained within the Project5-VehicleDetection.ipynb Jupyter notebook.
+output_images contains the images generated for this writeup.
+
 ---
 ###Writeup / README
 
@@ -38,7 +42,7 @@ You're reading it!
 
 ####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in the first couple of code cells of the IPython notebook. The functions used to build lists of images, extract information and generate HOG features are here.
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
