@@ -82,13 +82,15 @@ I trained a linear SVM using the following steps:
 The code for the  sliding window search is in the "Strip Searching" section. There are also a couple of functions in the "Lesson Functions section too.
 I search in a number of strips going down the image. Overlapping each window by 50% with its neighbours seemed effective.
 Small search windows near the horizon (32x32) ranging to larger windows (96x96) down towards the bonnet of the car. The area above the horizon was not searched.
-After some deliberation I decided to search the whole width of the image. Masking the left side would mean a cleaner final video. However the detection of cars coming the other way seemed like a legitimate thing to do.
+After some deliberation I decided to search the whole width of the image. Masking the left side would mean a cleaner final video. However leaving it in - and therefore detecting cars coming the other way seemed like a legitimate thing to do.
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+Here's the windows I used:
 
 ![alt text][image3]
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+
+The find_cars function in the "Lesson functions" section of the notebook contains the code for searching images. I adapted this function from the lesson code to take in a collection of searches to perform. I also looked at making use of the multiprocessing library, and HOGDescriptors as per a couple of forum tips.
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
@@ -103,7 +105,9 @@ Here's a [link to my video result](./output_videos/project_video.mp4)
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
+I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected. 
+
+I used deque from collections to build a rolling buffer of heat maps. These were summed together before applying a threshold. For the video, I set-up a MyVideoProcessor class to house the heatmap buffer and update it from frame to frame.
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
@@ -125,8 +129,12 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
+Use of more training data is probably the simplest thing I could do. The search area can miss a small segment on the right hand side, which is where new cars are likely to appear. This should be corrected. Testing on more videoes with differing lighting conditions, road types and vehicles would also be helpful. For example, the search area is unlikely to pick up lorries given the size of windows I am using. 
+
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
 - manually sort the test / training data to avoid having near-identical images in both test and training sets.
 - augment the test / training data with additional images.
-- The window search does not cover the entire image; notably the right and bottom sides  can sometimes be missing a window. I could tweak the search algorithm to fit one last set of windows against the those edges hand edge.
+- The window search does not cover the entire image; notably the right and bottom sides can sometimes be missing a window. I could tweak the search algorithm to fit one last set of windows against the those edges hand edge.
+- Make use of the multiprocessing library, and HOGDescriptors to speed things up. Using an approach other than SVM may also prove faster.
+- some of the bounding boxes are larger than the car, meaning that when the box surrounding the car is larger than it needs to be. It would be nice to spend more time exploring this space so as to better capture the car shape.
