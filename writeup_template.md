@@ -131,6 +131,8 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 Use of more training data is probably the simplest thing I could do. The search area can miss a small segment on the right hand side, which is where new cars are likely to appear. This should be corrected. Testing on more videoes with differing lighting conditions, road types and vehicles would also be helpful. For example, the search area is unlikely to pick up lorries given the size of windows I am using. 
 
+Similarly, it would be use to test different conditions; especially with denser traffic.
+
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
 - manually sort the test / training data to avoid having near-identical images in both test and training sets.
