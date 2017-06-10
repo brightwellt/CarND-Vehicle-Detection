@@ -28,8 +28,8 @@ The goals / steps of this project are the following:
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ###Project Files
-Code for this solution is contained within the Project5-VehicleDetection.ipynb Jupyter notebook.
-output_images contains the images generated for this writeup.
+- Code for this solution is contained within the Project5-VehicleDetection.ipynb Jupyter notebook.
+- the output_images folder contains the images generated for this writeup and the output video.
 
 ---
 ###Writeup / README
@@ -42,7 +42,7 @@ You're reading it!
 
 ####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first couple of code cells of the IPython notebook. The functions used to build lists of images, extract information and generate HOG features are here.
+The code for this step is contained in the first couple of code cells of the IPython notebook. The functions used to build lists of images, extract information and generate HOG features are here. 
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
@@ -50,22 +50,39 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YUV` color space and HOG parameters of `orientations=11`, `pix_per_cell=16` and `cells_per_block=(2, 2)`:
 
 
 ![alt text][image2]
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I tried various combinations of parameters, running images through the classifier to assess accuracy. Of the color spaces I explored, YUV and YCrCb seemed particularly effective. I settled on the former. I also paid attention to the speed of operation. Increasing pix_per_cell to 16 helped with this without compromising accuracy. This can also be seen in the HOG features, where the edges are clearly being identified.
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+The workbook has a number of section headers. The classifier was trained in the cell marked "Classifier Training", using the extract_features functions from Cell 1.
+I trained a linear SVM using the following steps:
+- load car and not-car images
+- extract hog features from images
+- extract spatial features from images
+- extract color histogram features from images
+- stack and normalise features
+- split the data into training and test sets(*)
+- create a linear svc
+- fit the data to it.
+- check the accuracy of the fitted data.
+
+(*)The images were randomly sorted into training and test sets. One way I could improve the trainer would be to manually sort the data. The data provided had some near-identical images of cars; ideally I should ensure that identical images end up in the same set (training or test). 
 
 ###Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+
+The code for the  sliding window search is in the "Strip Searching" section. There are also a couple of functions in the "Lesson Functions section too.
+I search in a number of strips going down the image. Overlapping each window by 50% with its neighbours seemed effective.
+Small search windows near the horizon (32x32) ranging to larger windows (96x96) down towards the bonnet of the car. The area above the horizon was not searched.
+After some deliberation I decided to search the whole width of the image. Masking the left side would mean a cleaner final video. However the detection of cars coming the other way seemed like a legitimate thing to do.
 
 I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
@@ -81,7 +98,7 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output_videos/project_video.mp4)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
@@ -110,3 +127,6 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
+- manually sort the test / training data to avoid having near-identical images in both test and training sets.
+- augment the test / training data with additional images.
+- The window search does not cover the entire image; notably the right and bottom sides  can sometimes be missing a window. I could tweak the search algorithm to fit one last set of windows against the those edges hand edge.
