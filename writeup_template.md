@@ -144,8 +144,9 @@ Here I'll talk about the approach I took, what techniques I used, what worked an
 - some of the bounding boxes are larger than the car, meaning that when the box surrounding the car is larger than it needs to be. It would be nice to spend more time exploring this space so as to better capture the car shape.
 
 ### Bonus challenge
-I then took the code generated from my previous exercise - Advance Lane Finding - and used this to add lanes to the video.
+I then took the code generated from my previous exercise - Advanced Lane Finding - and used this to add lanes to the video. Here is the video:
 [link to my video result](./output_images/project_video_output_lanes.mp4)
 
 Here's a sample frame:
+
 ![alt text][image7]
