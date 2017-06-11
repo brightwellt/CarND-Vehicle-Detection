@@ -22,7 +22,9 @@ The goals / steps of this project are the following:
 [image5]: ./output_images/bboxes_heat01.PNG
 [image5b]: ./output_images/bboxes_heat02.PNG
 [image6]: ./output_images/06_labelHeatmap.PNG
-[video1]: ./output_images/project_video.mp4
+[image7]: ./output_images/07_challenge.PNG
+[video1]: ./output_images/project_video_output.mp4
+[video2]: ./output_images/project_video_output_lanes.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -93,7 +95,7 @@ Here's the windows I used:
 The find_cars function in the "Lesson functions" section of the notebook contains the code for searching images. I adapted this function from the lesson code to take in a collection of searches to perform. I also looked at making use of the multiprocessing library, and HOGDescriptors as per a couple of forum tips.
 With more time I would look at tuning the SVC's C parameter, or doing some negative mining.
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I searched on three scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
 ![alt text][image4]
 ---
@@ -117,7 +119,7 @@ Here's an example result showing the heatmap from a series of frames of video, t
 ![alt text][image5]
 ![alt text][image5b]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames and the bounding box drawn onto the last image in the series:
+### Here is the output of the integrated heatmap from all six frames and the labels bounding box drawn onto the last image in the series:
 ![alt text][image6]
 
 
@@ -127,7 +129,7 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Use of more training data is probably the simplest thing I could do. The search area can miss a small segment on the right hand side, which is where new cars are likely to appear. This should be corrected. Testing on more videoes with differing lighting conditions, road types and vehicles would also be helpful. For example, the search area is unlikely to pick up lorries given the size of windows I am using. 
+Using of more training data is probably the simplest thing I could do. The search area can miss a small segment on the right hand side, which is where new cars are likely to appear. This should be corrected. Testing on more videoes with differing lighting conditions, road types and vehicles would also be helpful. For example, the search area is unlikely to pick up lorries given the size of windows I am using. 
 
 Similarly, it would be use to test different conditions; especially with denser traffic.
 
@@ -139,3 +141,10 @@ Here I'll talk about the approach I took, what techniques I used, what worked an
 - The window search does not cover the entire image; notably the right and bottom sides can sometimes be missing a window. I could tweak the search algorithm to fit one last set of windows against the those edges hand edge.
 - Make use of the multiprocessing library, and HOGDescriptors to speed things up. Using an approach other than SVM may also prove faster.
 - some of the bounding boxes are larger than the car, meaning that when the box surrounding the car is larger than it needs to be. It would be nice to spend more time exploring this space so as to better capture the car shape.
+
+### Bonus challenge
+I then took the code generated from my previous exercise - Advance Lane Finding - and used this to add lanes to the video.
+[link to my video result](./output_videos/project_video_output_lanes.mp4)
+
+Here's a sample frame:
+![alt text][image7]
