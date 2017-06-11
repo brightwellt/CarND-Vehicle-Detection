@@ -63,7 +63,7 @@ I tried various combinations of parameters, running images through the classifie
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-The workbook has a number of section headers. The classifier was trained in the cell marked "Classifier Training", using the extract_features functions from Cell 1.
+The workbook has a number of section headers. The classifier was trained in the cell marked "Classifier Training", using the extract_features functions from the "Lesson Functions" section..
 I trained a linear SVM using the following steps:
 - load car and not-car images
 - extract hog features from images
@@ -84,6 +84,7 @@ I trained a linear SVM using the following steps:
 The code for the  sliding window search is in the "Strip Searching" section. There are also a couple of functions in the "Lesson Functions section too.
 I search in a number of strips going down the image. Overlapping each window by 50% with its neighbours seemed effective.
 I used 3 search windows. A small search window strip (roughly 42x42) near the horizon, and then two more strips (55x55, 96x96) down towards the bonnet of the car. The area above the horizon was not searched.
+I decided upon these strips by experimenting with various test images. Smaller strips help with the smaller car images nearer the horizon. Too-large windows made for bulky bounding boxes.
 I also explored clipping the left and right sides of the image, but ultimately decided to search the whole width of the image. Masking the left side would mean a cleaner final video. However leaving it in - and therefore detecting cars coming the other way seemed like a legitimate thing to do.
 
 Here's the windows I used:
@@ -103,7 +104,7 @@ Ultimately I searched on three scales using YCrCb 3-channel HOG features plus sp
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./output_videos/project_video.mp4)
+Here's a [link to my video result](./output_images/project_video_output.mp4)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
@@ -144,7 +145,7 @@ Here I'll talk about the approach I took, what techniques I used, what worked an
 
 ### Bonus challenge
 I then took the code generated from my previous exercise - Advance Lane Finding - and used this to add lanes to the video.
-[link to my video result](./output_videos/project_video_output_lanes.mp4)
+[link to my video result](./output_images/project_video_output_lanes.mp4)
 
 Here's a sample frame:
 ![alt text][image7]
