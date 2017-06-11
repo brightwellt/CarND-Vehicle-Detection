@@ -31,7 +31,7 @@ The goals / steps of this project are the following:
 
 ###Project Files
 - Code for this solution is contained within the Project5-VehicleDetection.ipynb Jupyter notebook.
-- the output_images folder contains the images generated for this writeup and the output video.
+- the output_images folder contains the images generated for this writeup and the output videos.
 
 ---
 ###Writeup / README
