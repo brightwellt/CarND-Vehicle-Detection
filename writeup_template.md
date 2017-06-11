@@ -16,13 +16,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 [image1]: ./output_images/01_car_not_car.PNG
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
+[image2]: ./output_images/02_HOG.PNG
+[image3]: ./output_images/03_sliding.PNG
+[image4]: ./output_images/04_boxes.PNG
+[image5]: ./output_images/bboxes_heat01.PNG
+[image5b]: ./output_images/bboxes_heat02.PNG
+[image6]: ./output_images/06_labelHeatmap.PNG
+[video1]: ./output_images/project_video.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -81,8 +81,8 @@ I trained a linear SVM using the following steps:
 
 The code for the  sliding window search is in the "Strip Searching" section. There are also a couple of functions in the "Lesson Functions section too.
 I search in a number of strips going down the image. Overlapping each window by 50% with its neighbours seemed effective.
-Small search windows near the horizon (32x32) ranging to larger windows (96x96) down towards the bonnet of the car. The area above the horizon was not searched.
-After some deliberation I decided to search the whole width of the image. Masking the left side would mean a cleaner final video. However leaving it in - and therefore detecting cars coming the other way seemed like a legitimate thing to do.
+I used 3 search windows. A small search window strip (roughly 42x42) near the horizon, and then two more strips (55x55, 96x96) down towards the bonnet of the car. The area above the horizon was not searched.
+I also explored clipping the left and right sides of the image, but ultimately decided to search the whole width of the image. Masking the left side would mean a cleaner final video. However leaving it in - and therefore detecting cars coming the other way seemed like a legitimate thing to do.
 
 Here's the windows I used:
 
@@ -91,6 +91,7 @@ Here's the windows I used:
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 The find_cars function in the "Lesson functions" section of the notebook contains the code for searching images. I adapted this function from the lesson code to take in a collection of searches to perform. I also looked at making use of the multiprocessing library, and HOGDescriptors as per a couple of forum tips.
+With more time I would look at tuning the SVC's C parameter, or doing some negative mining.
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
@@ -114,13 +115,10 @@ Here's an example result showing the heatmap from a series of frames of video, t
 ### Here are six frames and their corresponding heatmaps:
 
 ![alt text][image5]
+![alt text][image5b]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames and the bounding box drawn onto the last image in the series:
 ![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
 
 
 ---
@@ -137,6 +135,7 @@ Here I'll talk about the approach I took, what techniques I used, what worked an
 
 - manually sort the test / training data to avoid having near-identical images in both test and training sets.
 - augment the test / training data with additional images.
+- look at tuning the SVC's C parameter, or doing some negative mining.
 - The window search does not cover the entire image; notably the right and bottom sides can sometimes be missing a window. I could tweak the search algorithm to fit one last set of windows against the those edges hand edge.
 - Make use of the multiprocessing library, and HOGDescriptors to speed things up. Using an approach other than SVM may also prove faster.
 - some of the bounding boxes are larger than the car, meaning that when the box surrounding the car is larger than it needs to be. It would be nice to spend more time exploring this space so as to better capture the car shape.
